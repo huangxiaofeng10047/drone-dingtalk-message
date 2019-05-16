@@ -134,7 +134,7 @@ func (p *Plugin) markdownTpl() string {
 	var tpl string
 
 	//  title
-	title := fmt.Sprintf(" %s *Branch Build %s*",
+	title := fmt.Sprintf(" %s *分支 构建 %s*",
 		strings.Title(p.Drone.Commit.Branch),
 		strings.Title(p.Drone.Build.Status))
 	//  with color on title
@@ -161,7 +161,7 @@ func (p *Plugin) markdownTpl() string {
 	//  sha info
 	commitSha := p.Drone.Commit.Sha
 	if p.Extra.LinkSha {
-		commitSha = fmt.Sprintf("[Click To %s Commit Detail Page](%s)", commitSha[:6], p.Drone.Commit.Link)
+		commitSha = fmt.Sprintf("[点击查看 Commit %s 信息](%s)", commitSha[:6], p.Drone.Commit.Link)
 	}
 	tpl += commitSha + "\n\n"
 
@@ -170,7 +170,7 @@ func (p *Plugin) markdownTpl() string {
 	tpl += authorInfo + "\n\n"
 
 	//  build detail link
-	buildDetail := fmt.Sprintf("[Click To The Build Detail Page %s](%s)",
+	buildDetail := fmt.Sprintf("[点击查看构建信息 %s](%s)",
 		p.getEmoticon(),
 		p.Drone.Build.Link)
 	tpl += buildDetail

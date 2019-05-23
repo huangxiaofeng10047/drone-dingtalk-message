@@ -1,5 +1,5 @@
 # Drone CI DingTalk Message Plugin
-[![Build Status](https://drone.lddsb.com/api/badges/lddsb/drone-dingtalk-message/status.svg)](https://drone.lddsb.com/lddsb/drone-dingtalk-message) [![Go Report Card](https://goreportcard.com/badge/github.com/lddsb/drone-dingtalk-message)](https://goreportcard.com/report/github.com/lddsb/drone-dingtalk-message) [![codecov](https://codecov.io/gh/lddsb/drone-dingtalk-message/branch/master/graph/badge.svg)](https://codecov.io/gh/lddsb/drone-dingtalk-message) [![codebeat badge](https://codebeat.co/badges/23f68b84-1fd2-4f29-8467-9285c1e0facc)](https://codebeat.co/projects/github-com-lddsb-drone-dingtalk-message-master) [![LICENSE: MIT](https://img.shields.io/github/license/lddsb/drone-dingtalk-message.svg?style=flat-square)](LICENSE)
+![](https://img.shields.io/docker/cloud/automated/guoxudongdocker/drone-dingtalk.svg)
 
 ### Drone CI Plugin Config
 `0.8.x`
@@ -7,7 +7,7 @@
 pipeline:
   ...
   notification:
-    image: lddsb/drone-dingtalk-message
+    image: guoxudongdocker/drone-dingtalk
     token: your-group-bot-token
     type: markdown
 ```
@@ -20,7 +20,7 @@ name: default
 steps:
 ...
 - name: notification
-  image: lddsb/drone-dingtalk-message
+  image: guoxudongdocker/drone-dingtalk
   settings:
     token: your-groupbot-token
     type: markdown
@@ -89,13 +89,6 @@ String. You can customize the picture for the `build failure` message by this op
 
 ![markdown-massage-customize](https://i.imgur.com/xFrCTZp.jpg)
 
-### Todo
-
-- Multi-Type
-- Multi-Lang
-- More User Customization
-
-
 ### Development
 
 - First get this repo
@@ -114,3 +107,13 @@ cd $GOPATH/src/github.com/lddsb/drone-dingtalk-message && go build .
 ```shell
 ./drone-dingtalk-message -h
 ```
+- dockerbuild
+```shell
+docker build .
+```
+
+### 优化
+
+在原有项目的基础上进行了汉化，调整了 `success` 等图片的大小
+
+![WX20190523-112552.png](https://i.loli.net/2019/05/23/5ce612d6bb32d60860.png)

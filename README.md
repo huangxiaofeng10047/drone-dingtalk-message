@@ -1,5 +1,6 @@
 # Drone CI DingTalk Message Plugin
 ![](https://img.shields.io/docker/cloud/automated/guoxudongdocker/drone-dingtalk.svg)
+![Docker Pulls](https://img.shields.io/docker/pulls/guoxudongdocker/drone-dingtalk.svg)
 
 ### Drone CI Plugin Config
 `0.8.x`

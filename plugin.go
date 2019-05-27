@@ -134,7 +134,8 @@ func (p *Plugin) markdownTpl() string {
 	var tpl string
 
 	//  title
-	title := fmt.Sprintf(" %s *分支 构建 %s*",
+	title := fmt.Sprintf("%s - %s *分支 构建 %s*",
+		strings.Title(p.Drone.Repo.FullName),
 		strings.Title(p.Drone.Commit.Branch),
 		strings.Title(p.Drone.Build.Status))
 	//  with color on title

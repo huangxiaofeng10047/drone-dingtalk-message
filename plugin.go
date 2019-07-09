@@ -120,7 +120,7 @@ func (p *Plugin) Exec() error {
 	case "actioncard":
 		linkTitles := []string{"构建信息", "进行部署"}
 		linkUrls := []string{p.Drone.Build.Link, "http://devops.keking.cn/"}
-		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, false)
+		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
 	default:
 		msg := "not support message type"
 		err = errors.New(msg)
@@ -168,7 +168,7 @@ func (p * Plugin) actionCardTpl() string {
 	if p.Extra.LinkSha {
 		commitSha = fmt.Sprintf("[查看 Commit %s 信息](%s)", commitSha[:6], p.Drone.Commit.Link)
 	}
-	tpl += commitSha + " | "
+	tpl += commitSha + "\n\n"
 
 	//  author info
 	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)

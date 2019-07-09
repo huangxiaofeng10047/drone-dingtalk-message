@@ -215,7 +215,7 @@ func (p *Plugin) baseTpl() string {
 			p.Drone.Commit.Sha[:6],
 			p.Drone.Commit.Authors.Name,
 			p.Drone.Commit.Authors.Email)
-	case "actionCard":
+	case "actioncard":
 		tpl = p.markdownTpl()
 	}
 

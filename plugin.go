@@ -178,16 +178,17 @@ func (p *Plugin) markdownTpl() string {
 	var tpl string
 
 	//  title
-	title := fmt.Sprintf("%s - %s *分支 构建 %s*",
-		strings.Title(p.Drone.Repo.FullName),
-		strings.Title(p.Drone.Commit.Branch),
-		strings.Title(p.Drone.Build.Status))
+	title := fmt.Sprintf("%s",
+		strings.Title(p.Drone.Repo.FullName))
 	//  with color on title
 	if p.Extra.Color.WithColor {
 		title = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), title)
 	}
 
 	tpl = fmt.Sprintf("# %s \n", title)
+
+	branch := fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
+	tpl += branch + "\n\n"
 
 	// with pic
 	if p.Extra.Pic.WithPic {
@@ -197,7 +198,7 @@ func (p *Plugin) markdownTpl() string {
 	}
 
 	//  commit message
-	commitMsg := fmt.Sprintf("%s", p.Drone.Commit.Message)
+	commitMsg := fmt.Sprintf("Commit 信息”%s", p.Drone.Commit.Message)
 	if p.Extra.Color.WithColor {
 		commitMsg = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), commitMsg)
 	}
@@ -211,14 +212,19 @@ func (p *Plugin) markdownTpl() string {
 	tpl += commitSha + "\n\n"
 
 	//  author info
-	authorInfo := fmt.Sprintf("`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)
+	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)
 	tpl += authorInfo + "\n\n"
 
 	//  build detail link
 	buildDetail := fmt.Sprintf("[点击查看构建信息 %s](%s)",
 		p.getEmoticon(),
-		p.Drone.Build.Link)
+		p.Drone.Build.Link) + "\n\n"
 	tpl += buildDetail
+
+	// deploy link
+	deployLink := fmt.Sprintf("<h1>[点击进去部署页面](%s)</h1>","https://devops.keking.cn")
+	tpl += deployLink
+	
 	return tpl
 }
 

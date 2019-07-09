@@ -118,10 +118,8 @@ func (p *Plugin) Exec() error {
 	case "link":
 		err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
 	case "actioncard":
-		log.Println(p.Drone.Commit.Link)
-		log.Println(p.Drone.Build.Link)
-		linkTitles := []string{"Commit 信息", "构建信息", "部署"}
-		linkUrls := []string{p.Drone.Commit.Link, p.Drone.Build.Link, "http://devops.keking.cn/"}
+		linkTitles := []string{"构建信息", "进行部署"}
+		linkUrls := []string{p.Drone.Build.Link, "http://devops.keking.cn/"}
 		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, false)
 	default:
 		msg := "not support message type"
@@ -164,6 +162,13 @@ func (p * Plugin) actionCardTpl() string {
 		commitMsg = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), commitMsg)
 	}
 	tpl += commitMsg + "\n\n"
+
+	//  sha info
+	commitSha := p.Drone.Commit.Sha 
+	if p.Extra.LinkSha {
+		commitSha = fmt.Sprintf("[查看 Commit %s 信息](%s)", commitSha[:6], p.Drone.Commit.Link)
+	}
+	tpl += commitSha + " | "
 
 	//  author info
 	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)

@@ -112,11 +112,15 @@ func (p *Plugin) Exec() error {
 	mobiles := strings.Split(p.Config.Mobiles, ",")
 	switch strings.ToLower(p.Config.MsgType) {
 	case "markdown":
-		err = newWebhook.SendMarkdownMsg("You have a new message...", p.baseTpl(), p.Config.IsAtALL, mobiles...)
+		err = newWebhook.SendMarkdownMsg("新的构建通知", p.baseTpl(), p.Config.IsAtALL, mobiles...)
 	case "text":
 		err = newWebhook.SendTextMsg(p.baseTpl(), p.Config.IsAtALL, mobiles...)
 	case "link":
 		err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
+	case "actioncard":
+		var linkTitles []string = []string{p.Drone.Repo.FullName}
+		var linkUrls []string = []string{p.Drone.Build.Link}
+		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, false)
 	default:
 		msg := "not support message type"
 		err = errors.New(msg)
@@ -128,6 +132,14 @@ func (p *Plugin) Exec() error {
 
 	return err
 }
+
+// actionCard `output the tpl of actionCard`
+func (p * Plugin) actionCardTpl() string {
+	var tpl string
+
+	return tpl
+}
+
 
 // markdownTpl `output the tpl of markdown`
 func (p *Plugin) markdownTpl() string {
@@ -175,11 +187,6 @@ func (p *Plugin) markdownTpl() string {
 		p.getEmoticon(),
 		p.Drone.Build.Link)
 	tpl += buildDetail
-
-	// cd btn
-	cdBtn := fmt.Sprintf("[<button>测试按钮</button>](http://www.baidu.com)")
-	tpl += cdBtn
-
 	return tpl
 }
 
@@ -209,8 +216,7 @@ func (p *Plugin) baseTpl() string {
 			p.Drone.Commit.Authors.Name,
 			p.Drone.Commit.Authors.Email)
 	case "actionCard":
-		//  coming soon
-
+		tpl = p.markdownTpl()
 	}
 
 	return tpl

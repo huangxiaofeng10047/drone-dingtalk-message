@@ -163,16 +163,16 @@ func (p * Plugin) actionCardTpl() string {
 	}
 	tpl += commitMsg + "\n\n"
 
+	//  author info
+	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)
+	tpl += authorInfo  + "\n\n"
+
 	//  sha info
 	commitSha := p.Drone.Commit.Sha 
 	if p.Extra.LinkSha {
-		commitSha = fmt.Sprintf("[查看 Commit %s 信息](%s)", commitSha[:6], p.Drone.Commit.Link)
+		commitSha = fmt.Sprintf("[点击查看 Commit %s 信息](%s)", commitSha[:6], p.Drone.Commit.Link)
 	}
 	tpl += commitSha + "\n\n"
-
-	//  author info
-	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)
-	tpl += authorInfo
 
 	return tpl
 }

@@ -217,8 +217,8 @@ func (p *Plugin) markdownTpl() string {
 	tpl += commitSha + " | "
 
 	//  build detail link
-	buildDetail := fmt.Sprintf("[查看构建信息 %s](%s)",
-		p.getEmoticon(),
+	buildDetail := fmt.Sprintf("[查看构建信息](%s)",
+		// p.getEmoticon(),
 		p.Drone.Build.Link) + " | "
 	tpl += buildDetail
 

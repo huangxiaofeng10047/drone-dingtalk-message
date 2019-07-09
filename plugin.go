@@ -118,13 +118,11 @@ func (p *Plugin) Exec() error {
 	case "link":
 		err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
 	case "actioncard":
-		commitSha := fmt.Sprintf("点击查看 Commit %s 信息", p.Drone.Commit.Sha[:6])
-		commitLink := p.Drone.Commit.Link
-		log.Println(commitSha)
-		log.Println(commitLink)
-		linkTitles := []string{commitSha, "点击查看构建信息", "部署"}
-		linkUrls := []string{commitLink, p.Drone.Build.Link, "http://devops.keking.cn"}
-		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, false)
+		log.Println(p.Drone.Commit.Link)
+		log.Println(p.Drone.Build.Link)
+		linkTitles := []string{"点击查看 Commit 信息", "点击查看构建信息", "部署"}
+		linkUrls := []string{p.Drone.Commit.Link, p.Drone.Build.Link, "http://devops.keking.cn"}
+		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, false, false)
 	default:
 		msg := "not support message type"
 		err = errors.New(msg)
@@ -140,6 +138,36 @@ func (p *Plugin) Exec() error {
 // actionCard `output the tpl of actionCard`
 func (p * Plugin) actionCardTpl() string {
 	var tpl string
+
+	//  title
+	title := fmt.Sprintf("%s",strings.Title(p.Drone.Repo.FullName))
+	//  with color on title
+	if p.Extra.Color.WithColor {
+		title = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), title)
+	}
+
+	tpl = fmt.Sprintf("# %s \n", title)
+
+	branch := fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
+	tpl += branch + "\n\n"
+
+	// with pic
+	if p.Extra.Pic.WithPic {
+		tpl += fmt.Sprintf("![%s](%s)\n\n",
+			p.Drone.Build.Status,
+			p.getPicURL())
+	}
+
+	//  commit message
+	commitMsg := fmt.Sprintf("%s", p.Drone.Commit.Message)
+	if p.Extra.Color.WithColor {
+		commitMsg = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), commitMsg)
+	}
+	tpl += commitMsg + "\n\n"
+
+	//  author info
+	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)
+	tpl += authorInfo
 
 	return tpl
 }
@@ -220,7 +248,7 @@ func (p *Plugin) baseTpl() string {
 			p.Drone.Commit.Authors.Name,
 			p.Drone.Commit.Authors.Email)
 	case "actioncard":
-		tpl = p.markdownTpl()
+		tpl = p.actionCardTpl()
 	}
 
 	return tpl

@@ -122,7 +122,7 @@ func (p *Plugin) Exec() error {
 		log.Println(p.Drone.Build.Link)
 		linkTitles := []string{"Commit 信息", "构建信息", "部署"}
 		linkUrls := []string{p.Drone.Commit.Link, p.Drone.Build.Link, "http://devops.keking.cn/"}
-		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
+		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, false)
 	default:
 		msg := "not support message type"
 		err = errors.New(msg)

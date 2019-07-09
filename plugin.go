@@ -175,6 +175,11 @@ func (p *Plugin) markdownTpl() string {
 		p.getEmoticon(),
 		p.Drone.Build.Link)
 	tpl += buildDetail
+
+	// cd btn
+	cdBtn := fmt.Sprintf("[<button>测试按钮</button>](http://www.baidu.com)")
+	tpl += cdBtn
+
 	return tpl
 }
 

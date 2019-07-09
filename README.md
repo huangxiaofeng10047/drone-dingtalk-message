@@ -118,3 +118,5 @@ docker build .
 在原有项目的基础上进行了汉化，调整了 `success` 等图片的大小
 
 ![WX20190523-112552.png](https://i.loli.net/2019/05/23/5ce612d6bb32d60860.png)
+
+- 新增 repo 名称

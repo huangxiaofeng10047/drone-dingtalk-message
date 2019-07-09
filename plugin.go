@@ -120,9 +120,9 @@ func (p *Plugin) Exec() error {
 	case "actioncard":
 		log.Println(p.Drone.Commit.Link)
 		log.Println(p.Drone.Build.Link)
-		linkTitles := []string{"点击查看 Commit 信息", "点击查看构建信息", "部署"}
+		linkTitles := []string{"Commit 信息", "构建信息", "部署"}
 		linkUrls := []string{p.Drone.Commit.Link, p.Drone.Build.Link, "http://devops.keking.cn/"}
-		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, false, false)
+		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
 	default:
 		msg := "not support message type"
 		err = errors.New(msg)
@@ -159,7 +159,7 @@ func (p * Plugin) actionCardTpl() string {
 	}
 
 	//  commit message
-	commitMsg := fmt.Sprintf("%s", p.Drone.Commit.Message)
+	commitMsg := fmt.Sprintf("Commit 信息：%s", p.Drone.Commit.Message)
 	if p.Extra.Color.WithColor {
 		commitMsg = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), commitMsg)
 	}

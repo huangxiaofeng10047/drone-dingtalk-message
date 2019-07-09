@@ -118,8 +118,12 @@ func (p *Plugin) Exec() error {
 	case "link":
 		err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
 	case "actioncard":
-		var linkTitles []string = []string{p.Drone.Repo.FullName}
-		var linkUrls []string = []string{p.Drone.Build.Link}
+		commitSha := fmt.Sprintf("点击查看 Commit %s 信息", p.Drone.Commit.Sha[:6])
+		commitLink := p.Drone.Commit.Link
+		log.Println(commitSha)
+		log.Println(commitLink)
+		linkTitles := []string{commitSha, "点击查看构建信息", "部署"}
+		linkUrls := []string{commitLink, p.Drone.Build.Link, "http://devops.keking.cn"}
 		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, false)
 	default:
 		msg := "not support message type"

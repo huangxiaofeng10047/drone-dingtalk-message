@@ -231,13 +231,13 @@ func (p *Plugin) markdownTpl() string {
 	//  build detail link
 	buildDetail := fmt.Sprintf("[查看构建信息](%s)",
 		// p.getEmoticon(),
-		p.Drone.Build.Link) + " | "
+		p.Drone.Build.Link) 
 	tpl += buildDetail
 
 	// deploy link
 	if p.Drone.Build.RepoName != "" {
 		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", p.Drone.Build.RepoName, p.Drone.Build.Image)
-		deployLink := fmt.Sprintf("[进入部署页面](%s)",deployUrl)
+		deployLink := fmt.Sprintf(" | [进入部署页面](%s)",deployUrl)
 		tpl += deployLink
 	}
 	

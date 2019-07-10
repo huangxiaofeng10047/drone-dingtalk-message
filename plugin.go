@@ -120,8 +120,9 @@ func (p *Plugin) Exec() error {
 	case "link":
 		err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
 	case "actioncard":
+		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", p.Drone.Build.RepoName, p.Drone.Build.Image)
 		linkTitles := []string{"构建信息", "进行部署"}
-		linkUrls := []string{p.Drone.Build.Link, "http://devops.keking.cn/"}
+		linkUrls := []string{p.Drone.Build.Link, deployUrl}
 		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
 	default:
 		msg := "not support message type"
@@ -234,13 +235,10 @@ func (p *Plugin) markdownTpl() string {
 	tpl += buildDetail
 
 	// deploy link
-	deployLink := fmt.Sprintf("<h1>[进入部署页面](%s)</h1>","https://devops.keking.cn")
+	deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", p.Drone.Build.RepoName, p.Drone.Build.Image)
+	deployLink := fmt.Sprintf("[进入部署页面](%s)",deployUrl)
 	tpl += deployLink
 	
-	//  docker info
-	log.Println(p.Drone.Build.RepoName)
-	log.Println(p.Drone.Build.Image)
-
 	return tpl
 }
 

@@ -19,6 +19,7 @@ type (
 	Build struct {
 		Status string //  providers the current build status
 		Link   string //  providers the current build link
+		Repo   string   // Docker build repository
 	}
 
 	// Commit `commit info`
@@ -174,6 +175,9 @@ func (p * Plugin) actionCardTpl() string {
 	}
 	tpl += commitSha + "\n\n"
 
+	//  docker info
+	log.Println(p.Drone.Build.Repo)
+
 	return tpl
 }
 
@@ -288,12 +292,12 @@ get picture url
 func (p *Plugin) getPicURL() string {
 	pics := make(map[string]string)
 	//  success picture url
-	pics["success"] = "https://ws4.sinaimg.cn/large/006tNc79gy1fz05g5a7utj30he0bfjry.jpg"
+	pics["success"] = "https://ws4.sinaimg.cn/wap240/006tNc79gy1fz05g5a7utj30he0bfjry.jpg"
 	if p.Extra.Pic.SuccessPicURL != "" {
 		pics["success"] = p.Extra.Pic.SuccessPicURL
 	}
 	//  failure picture url
-	pics["failure"] = "https://ws1.sinaimg.cn/large/006tNc79gy1fz0b4fghpnj30hd0bdmxn.jpg"
+	pics["failure"] = "https://ws1.sinaimg.cn/wap240/006tNc79gy1fz0b4fghpnj30hd0bdmxn.jpg"
 	if p.Extra.Pic.FailurePicURL != "" {
 		pics["failure"] = p.Extra.Pic.FailurePicURL
 	}

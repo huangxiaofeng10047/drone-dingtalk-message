@@ -239,7 +239,7 @@ func (p *Plugin) markdownTpl() string {
 	
 	//  docker info
 	log.Println(fmt.Sprintf("repo name:%s", p.Drone.Build.RepoName))
-	log.Println(fmt.Sprintf("repo name:%s", p.Drone.Build.Image))
+	log.Println(fmt.Sprintf("image name:%s", p.Drone.Build.Image))
 
 	return tpl
 }

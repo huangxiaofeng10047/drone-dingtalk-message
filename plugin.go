@@ -247,25 +247,32 @@ func (p *Plugin) markdownTpl() string {
 	tpl += buildDetail
 
 	// deploy link
-	if p.Drone.Build.RepoName != "" {
-		//读取文件
-		b, err := ioutil.ReadFile("repo.txt")
-		if err != nil {
-			fmt.Println("ioutil ReadFile error: ", err)
-		}
-
-		fmt.Println("repo: ", string(b))
-		repoinfo := fmt.Sprintf("> Docker 镜像：%s",string(b))
-		tpl += repoinfo
-
-		content := strings.Split(string(b), ":")[0]
-		RepoName := strings.Split(content, "/")[1]
-		Image := strings.Split(content, ":")[2]
-
-		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
-		deployLink := fmt.Sprintf(" | [进入部署页面](%s)",deployUrl)
-		tpl += deployLink
+	b, err := ioutil.ReadFile("repo.txt")
+	if err != nil {
+		fmt.Println("ioutil ReadFile error: ", err)
 	}
+
+	fmt.Println("repo: ", string(b))
+
+	// if p.Drone.Build.RepoName != "" {
+	// 	//读取文件
+	// 	b, err := ioutil.ReadFile("repo.txt")
+	// 	if err != nil {
+	// 		fmt.Println("ioutil ReadFile error: ", err)
+	// 	}
+
+	// 	fmt.Println("repo: ", string(b))
+	// 	repoinfo := fmt.Sprintf("> Docker 镜像：%s",string(b))
+	// 	tpl += repoinfo
+
+	// 	content := strings.Split(string(b), ":")[0]
+	// 	RepoName := strings.Split(content, "/")[1]
+	// 	Image := strings.Split(content, ":")[2]
+
+	// 	deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
+	// 	deployLink := fmt.Sprintf(" | [进入部署页面](%s)",deployUrl)
+	// 	tpl += deployLink
+	// }
 	
 	return tpl
 }

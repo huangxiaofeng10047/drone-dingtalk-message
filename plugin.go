@@ -235,9 +235,11 @@ func (p *Plugin) markdownTpl() string {
 	tpl += buildDetail
 
 	// deploy link
-	deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", p.Drone.Build.RepoName, p.Drone.Build.Image)
-	deployLink := fmt.Sprintf("[进入部署页面](%s)",deployUrl)
-	tpl += deployLink
+	if p.Drone.Build.RepoName != "" {
+		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", p.Drone.Build.RepoName, p.Drone.Build.Image)
+		deployLink := fmt.Sprintf("[进入部署页面](%s)",deployUrl)
+		tpl += deployLink
+	}
 	
 	return tpl
 }

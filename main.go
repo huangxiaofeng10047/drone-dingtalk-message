@@ -110,6 +110,16 @@ func main() {
 			EnvVar: "DRONE_BUILD_LINK",
 		},
 		cli.StringFlag{
+			Name:   "build.repo_namespace",
+			Usage:  "build step docker repository",
+			EnvVar: "DRONE_BUILD_REPO_NAMESPACE",
+		},
+		cli.StringFlag{
+			Name:   "build.image_name",
+			Usage:  "build step docker repository",
+			EnvVar: "DRONE_BUILD_IMAGE_NAME",
+		},
+		cli.StringFlag{
 			Name:   "config.success.pic.url",
 			Usage:  "config success picture url",
 			EnvVar: "SUCCESS_PICTURE_URL,PLUGIN_SUCCESS_PIC",
@@ -161,8 +171,10 @@ func run(c *cli.Context) {
 			},
 			//  build info
 			Build: Build{
-				Status: c.String("build.status"),
-				Link:   c.String("build.link"),
+				Status:   c.String("build.status"),
+				Link:     c.String("build.link"),
+				RepoName: c.String("build.repo_namespace"),
+				Image:    c.String("build.image_name"),
 			},
 			Commit: Commit{
 				Sha:     c.String("commit.sha"),

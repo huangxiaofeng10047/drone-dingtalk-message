@@ -17,9 +17,10 @@ type (
 
 	// Build `build info`
 	Build struct {
-		Status string //  providers the current build status
-		Link   string //  providers the current build link
-		Repo   string   // Docker build repository
+		Status   string //  providers the current build status
+		Link     string //  providers the current build link
+		RepoName string // docker repo
+		Image    string // docker image name
 	}
 
 	// Commit `commit info`
@@ -176,8 +177,8 @@ func (p * Plugin) actionCardTpl() string {
 	tpl += commitSha + "\n\n"
 
 	//  docker info
-	log.Println("打印repo：")
-	log.Println(p.Drone.Build.Repo)
+	log.Println(fmt.Sprintf("repo name:%s", p.Drone.Build.RepoName))
+	log.Println(fmt.Sprintf("repo name:%s", p.Drone.Build.Image))
 
 	return tpl
 }

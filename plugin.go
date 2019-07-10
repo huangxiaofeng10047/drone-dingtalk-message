@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"io/ioutil"
 
 	webhook "github.com/lddsb/dingtalk-webhook"
 )
@@ -120,7 +121,18 @@ func (p *Plugin) Exec() error {
 	case "link":
 		err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
 	case "actioncard":
-		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", p.Drone.Build.RepoName, p.Drone.Build.Image)
+		//读取文件
+		b, err := ioutil.ReadFile("repo.txt")
+		if err != nil {
+			fmt.Println("ioutil ReadFile error: ", err)
+		}
+
+		fmt.Println("repo: ", string(b))
+		content := strings.Split(string(b), ":")[0]
+		RepoName := strings.Split(content, "/")[1]
+		Image := strings.Split(content, ":")[2]
+		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
+		
 		linkTitles := []string{"构建信息", "进行部署"}
 		linkUrls := []string{p.Drone.Build.Link, deployUrl}
 		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
@@ -236,7 +248,21 @@ func (p *Plugin) markdownTpl() string {
 
 	// deploy link
 	if p.Drone.Build.RepoName != "" {
-		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", p.Drone.Build.RepoName, p.Drone.Build.Image)
+		//读取文件
+		b, err := ioutil.ReadFile("repo.txt")
+		if err != nil {
+			fmt.Println("ioutil ReadFile error: ", err)
+		}
+
+		fmt.Println("repo: ", string(b))
+		repoinfo := fmt.Sprintf("> Docker 镜像：%s",string(b))
+		tpl += repoinfo
+
+		content := strings.Split(string(b), ":")[0]
+		RepoName := strings.Split(content, "/")[1]
+		Image := strings.Split(content, ":")[2]
+
+		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
 		deployLink := fmt.Sprintf(" | [进入部署页面](%s)",deployUrl)
 		tpl += deployLink
 	}

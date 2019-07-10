@@ -238,13 +238,11 @@ func (p *Plugin) markdownTpl() string {
 	if p.Extra.LinkSha {
 		commitSha = fmt.Sprintf("[查看 Commit 信息](%s)", p.Drone.Commit.Link)
 	}
-	tpl += commitSha + " | "
 
 	//  build detail link
 	buildDetail := fmt.Sprintf("[查看构建信息](%s)",
 		// p.getEmoticon(),
 		p.Drone.Build.Link) 
-	tpl += buildDetail
 
 	//读取文件
 	b, err := ioutil.ReadFile("repo.txt")
@@ -258,7 +256,7 @@ func (p *Plugin) markdownTpl() string {
 	// deploy link
 	if imagepath != "" {
 		repoinfo := fmt.Sprintf("> Docker 镜像：%s",imagepath)
-		tpl += repoinfo
+		tpl += repoinfo + "\n\n" + commitSha + " | " + buildDetail
 
 		content := strings.Split(imagepath, ":")[0]
 		RepoName := strings.Split(content, "/")[1]
@@ -267,6 +265,8 @@ func (p *Plugin) markdownTpl() string {
 		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
 		deployLink := fmt.Sprintf(" | [进入部署页面](%s)",deployUrl)
 		tpl += deployLink
+	}else{
+		tpl += commitSha + " | " + buildDetail
 	}
 	
 	return tpl

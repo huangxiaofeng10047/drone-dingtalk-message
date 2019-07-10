@@ -176,6 +176,7 @@ func (p * Plugin) actionCardTpl() string {
 	tpl += commitSha + "\n\n"
 
 	//  docker info
+	log.Println("打印repo：")
 	log.Println(p.Drone.Build.Repo)
 
 	return tpl

@@ -201,6 +201,9 @@ func (p * Plugin) actionCardTpl() string {
 func (p *Plugin) markdownTpl() string {
 	var tpl string
 
+	// top
+	tpl = fmt.Sprintf("![](%s)","https://ws3.sinaimg.cn/large/ad5fbf65gy1g4x3lk36p1j215s086k1p.jpg")
+
 	//  title
 	title := fmt.Sprintf("%s",
 		strings.Title(p.Drone.Repo.FullName))
@@ -209,7 +212,7 @@ func (p *Plugin) markdownTpl() string {
 		title = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), title)
 	}
 
-	tpl = fmt.Sprintf("# %s \n", title)
+	tpl += fmt.Sprintf("# %s \n", title)
 
 	branch := fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
 	tpl += branch + "\n\n"

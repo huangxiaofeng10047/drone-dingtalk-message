@@ -212,7 +212,7 @@ func (p *Plugin) markdownTpl() string {
 		title = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), title)
 	}
 
-	tpl += fmt.Sprintf("# >%s \n", title)
+	tpl += fmt.Sprintf("# %s \n", title)
 
 	branch := fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
 	tpl += branch + "\n\n"

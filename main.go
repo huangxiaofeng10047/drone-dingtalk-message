@@ -16,7 +16,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "Drone Dingtalk Message Plugin"
 	app.Usage = "Sending message to Dingtalk group by robot using webhook"
-	app.Copyright = "© 2018 Dee Luo"
+	app.Copyright = "© 2019 Guo Xudong"
 	app.Authors = []cli.Author{
 		{
 			Name:  "Dee Luo",

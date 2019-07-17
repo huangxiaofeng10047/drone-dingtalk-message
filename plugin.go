@@ -258,7 +258,12 @@ func (p *Plugin) markdownTpl() string {
 		fmt.Println("ioutil ReadFile error: ", err)
 	}
 
-	fmt.Println("repo: ", string(b))
+	//fmt.Println("repo: ", string(b))
+	repos := strings.Split(string(b), ",")
+	for i, reponame := range repos {
+		fmt.Println(i)
+		fmt.Println("repo:", reponame)
+	}
 	imagepath := string(b)
 
 	// deploy link

@@ -258,29 +258,34 @@ func (p *Plugin) markdownTpl() string {
 		fmt.Println("ioutil ReadFile error: ", err)
 	}
 
-	//fmt.Println("repo: ", string(b))
-	repos := strings.Split(string(b), ",")
-	for i, reponame := range repos {
-		fmt.Println(i)
-		fmt.Println("repo:", reponame)
-	}
 	imagepath := string(b)
 
 	// deploy link
 	if imagepath != "" {
-		repoinfo := fmt.Sprintf("> Docker 镜像：%s", imagepath)
-		tpl += repoinfo + "\n\n" + commitSha + " | " + buildDetail
-
-		content := strings.Split(imagepath, ":")[0]
-		RepoName := strings.Split(content, "/")[1]
-		Image := strings.Split(content, "/")[2]
-
-		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
-		deployLink := fmt.Sprintf(" | [进入部署页面](%s)", deployUrl)
-		tpl += deployLink
-	} else {
-		tpl += commitSha + " | " + buildDetail
+		repos := strings.Split(string(b), ",")
+		for _, reponame := range repos {
+			fmt.Println("repo:", reponame)
+			repoinfo := fmt.Sprintf("> Docker 镜像：%s", reponame)
+			content := strings.Split(reponame, ":")[0]
+			RepoName := strings.Split(content, "/")[1]
+			Image := strings.Split(content, "/")[2]
+			deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
+			deployLink := fmt.Sprintf(" | [部署 %s ](%s)", RepoName, deployUrl)
+			tpl += repoinfo + "\n\n" + deployLink + "\n\n"
+		}
+		//repoinfo := fmt.Sprintf("> Docker 镜像：%s", imagepath)
+		//tpl += repoinfo + "\n\n" + commitSha + " | " + buildDetail
+		//
+		//content := strings.Split(imagepath, ":")[0]
+		//RepoName := strings.Split(content, "/")[1]
+		//Image := strings.Split(content, "/")[2]
+		//
+		//deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
+		//deployLink := fmt.Sprintf(" | [进入部署页面](%s)", deployUrl)
+		//tpl += deployLink
 	}
+
+	tpl += commitSha + " | " + buildDetail
 
 	return tpl
 }

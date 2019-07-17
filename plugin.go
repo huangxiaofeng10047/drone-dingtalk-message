@@ -265,12 +265,12 @@ func (p *Plugin) markdownTpl() string {
 		repos := strings.Split(string(b), ",")
 		for _, reponame := range repos {
 			fmt.Println("repo:", reponame)
-			repoinfo := fmt.Sprintf("> Docker 镜像：%s", reponame)
 			content := strings.Split(reponame, ":")[0]
 			RepoName := strings.Split(content, "/")[1]
 			Image := strings.Split(content, "/")[2]
+			repoinfo := fmt.Sprintf("- %s 镜像：%s", Image, reponame)
 			deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
-			deployLink := fmt.Sprintf(" | [部署 %s ](%s)", RepoName, deployUrl)
+			deployLink := fmt.Sprintf(" [部署 %s ](%s)", Image, deployUrl)
 			tpl += repoinfo + "\n\n" + deployLink + "\n\n"
 		}
 		//repoinfo := fmt.Sprintf("> Docker 镜像：%s", imagepath)

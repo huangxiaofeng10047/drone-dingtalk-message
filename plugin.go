@@ -3,9 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"strings"
-	"io/ioutil"
 
 	webhook "github.com/lddsb/dingtalk-webhook"
 )
@@ -127,12 +127,18 @@ func (p *Plugin) Exec() error {
 			fmt.Println("ioutil ReadFile error: ", err)
 		}
 
-		fmt.Println("repo: ", string(b))
+		//fmt.Println("repo: ", string(b))
+		repos := strings.Split(string(b), ",")
+		for i, reponame := range repos {
+			fmt.Println(i)
+			fmt.Println("repo:", reponame)
+		}
+
 		content := strings.Split(string(b), ":")[0]
 		RepoName := strings.Split(content, "/")[1]
 		Image := strings.Split(content, "/")[2]
 		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
-		
+
 		linkTitles := []string{"构建信息", "进行部署"}
 		linkUrls := []string{p.Drone.Build.Link, deployUrl}
 		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
@@ -149,11 +155,11 @@ func (p *Plugin) Exec() error {
 }
 
 // actionCard `output the tpl of actionCard`
-func (p * Plugin) actionCardTpl() string {
+func (p *Plugin) actionCardTpl() string {
 	var tpl string
 
 	//  title
-	title := fmt.Sprintf("%s",strings.Title(p.Drone.Repo.FullName))
+	title := fmt.Sprintf("%s", strings.Title(p.Drone.Repo.FullName))
 	//  with color on title
 	if p.Extra.Color.WithColor {
 		title = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), title)
@@ -180,10 +186,10 @@ func (p * Plugin) actionCardTpl() string {
 
 	//  author info
 	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)
-	tpl += authorInfo  + "\n\n"
+	tpl += authorInfo + "\n\n"
 
 	//  sha info
-	commitSha := p.Drone.Commit.Sha 
+	commitSha := p.Drone.Commit.Sha
 	if p.Extra.LinkSha {
 		commitSha = fmt.Sprintf("[点击查看 Commit %s 信息](%s)", commitSha[:6], p.Drone.Commit.Link)
 	}
@@ -196,13 +202,12 @@ func (p * Plugin) actionCardTpl() string {
 	return tpl
 }
 
-
 // markdownTpl `output the tpl of markdown`
 func (p *Plugin) markdownTpl() string {
 	var tpl string
 
 	// top
-	tpl = fmt.Sprintf("![](%s) \n\n","https://ws3.sinaimg.cn/large/ad5fbf65gy1g4x3lk36p1j215s086k1p.jpg")
+	tpl = fmt.Sprintf("![](%s) \n\n", "https://ws3.sinaimg.cn/large/ad5fbf65gy1g4x3lk36p1j215s086k1p.jpg")
 
 	//  title
 	title := fmt.Sprintf("%s",
@@ -236,7 +241,7 @@ func (p *Plugin) markdownTpl() string {
 	tpl += authorInfo + "\n\n"
 
 	//  sha info
-	commitSha := p.Drone.Commit.Sha 
+	commitSha := p.Drone.Commit.Sha
 	// commitSha[:6]
 	if p.Extra.LinkSha {
 		commitSha = fmt.Sprintf("[查看 Commit 信息](%s)", p.Drone.Commit.Link)
@@ -245,7 +250,7 @@ func (p *Plugin) markdownTpl() string {
 	//  build detail link
 	buildDetail := fmt.Sprintf("[查看构建信息](%s)",
 		// p.getEmoticon(),
-		p.Drone.Build.Link) 
+		p.Drone.Build.Link)
 
 	//读取文件
 	b, err := ioutil.ReadFile("repo.txt")
@@ -258,7 +263,7 @@ func (p *Plugin) markdownTpl() string {
 
 	// deploy link
 	if imagepath != "" {
-		repoinfo := fmt.Sprintf("> Docker 镜像：%s",imagepath)
+		repoinfo := fmt.Sprintf("> Docker 镜像：%s", imagepath)
 		tpl += repoinfo + "\n\n" + commitSha + " | " + buildDetail
 
 		content := strings.Split(imagepath, ":")[0]
@@ -266,12 +271,12 @@ func (p *Plugin) markdownTpl() string {
 		Image := strings.Split(content, "/")[2]
 
 		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
-		deployLink := fmt.Sprintf(" | [进入部署页面](%s)",deployUrl)
+		deployLink := fmt.Sprintf(" | [进入部署页面](%s)", deployUrl)
 		tpl += deployLink
-	}else{
+	} else {
 		tpl += commitSha + " | " + buildDetail
 	}
-	
+
 	return tpl
 }
 

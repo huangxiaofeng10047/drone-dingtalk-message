@@ -222,6 +222,10 @@ func (p *Plugin) markdownTpl() string {
 	branch := fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
 	tpl += branch + "\n\n"
 
+	//  author info
+	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)
+	tpl += authorInfo + "\n\n"
+
 	// with pic
 	if p.Extra.Pic.WithPic {
 		tpl += fmt.Sprintf("![%s](%s)\n\n",
@@ -235,10 +239,6 @@ func (p *Plugin) markdownTpl() string {
 		commitMsg = fmt.Sprintf("<font color=%s>%s</font>", p.getColor(), commitMsg)
 	}
 	tpl += commitMsg + "\n\n"
-
-	//  author info
-	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)
-	tpl += authorInfo + "\n\n"
 
 	//  sha info
 	commitSha := p.Drone.Commit.Sha

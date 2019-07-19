@@ -273,19 +273,11 @@ func (p *Plugin) markdownTpl() string {
 			deployLink := fmt.Sprintf("> [部署 「%s」 ](%s)", Image, deployUrl)
 			tpl += repoinfo + "\n\n" + deployLink + "\n\n"
 		}
-		//repoinfo := fmt.Sprintf("> Docker 镜像：%s", imagepath)
-		//tpl += repoinfo + "\n\n" + commitSha + " | " + buildDetail
-		//
-		//content := strings.Split(imagepath, ":")[0]
-		//RepoName := strings.Split(content, "/")[1]
-		//Image := strings.Split(content, "/")[2]
-		//
-		//deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
-		//deployLink := fmt.Sprintf(" | [进入部署页面](%s)", deployUrl)
-		//tpl += deployLink
 	}
 
-	tpl += "---\n\n" + commitSha + " | " + buildDetail
+	tpl += "---\n\n" + commitSha + " | " + buildDetail + "\n\n"
+
+	tpl += fmt.Sprintf("![](%s) \n\n", "https://ws2.sinaimg.cn/large/ad5fbf65gy1g552n29tiwj21ag04k74m.jpg")
 
 	return tpl
 }

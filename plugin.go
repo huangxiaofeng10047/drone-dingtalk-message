@@ -277,7 +277,7 @@ func (p *Plugin) markdownTpl() string {
 
 	tpl += "---\n\n" + commitSha + " | " + buildDetail + "\n\n"
 
-	tpl += fmt.Sprintf("![](%s) \n\n", "https://ws2.sinaimg.cn/large/ad5fbf65gy1g552n29tiwj21ag04k74m.jpg")
+	tpl += fmt.Sprintf("![](%s) \n\n", "https://wx3.sinaimg.cn/large/ad5fbf65gy1g555rtnt4kj22ks04kjta.jpg")
 
 	return tpl
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"strings"
@@ -96,6 +97,13 @@ type (
 		Drone  Drone
 		Config Config
 		Extra  Extra
+	}
+
+	// Envfile
+	Envfile struct {
+		ConfigPkg string   `yaml:"configPkg"`
+		CheckList []string `yaml:"checkList"`
+		ImageList []string `yaml:"imageList"`
 	}
 )
 
@@ -252,17 +260,21 @@ func (p *Plugin) markdownTpl() string {
 		// p.getEmoticon(),
 		p.Drone.Build.Link)
 
-	//读取文件
-	b, err := ioutil.ReadFile("repo.txt")
-	if err != nil {
-		fmt.Println("ioutil ReadFile error: ", err)
-	}
+	envfile := Envfile{}
+	envfile.ReadYaml("./env.yaml")
+	repos := envfile.ImageList
 
-	imagepath := string(b)
+	//读取文件
+	//b, err := ioutil.ReadFile("repo.txt")
+	//if err != nil {
+	//	fmt.Println("ioutil ReadFile error: ", err)
+	//}
+
+	//imagepath := string(b)
 
 	// deploy link
-	if imagepath != "" {
-		repos := strings.Split(string(b), ",")
+	if len(repos) > 0 {
+		//repos := strings.Split(string(b), ",")
 		for _, reponame := range repos {
 			fmt.Println("repo:", reponame)
 			content := strings.Split(reponame, ":")[0]
@@ -376,4 +388,15 @@ func (p *Plugin) getColor() string {
 	}
 
 	return ""
+}
+
+func (c *Envfile) ReadYaml(f string) {
+	buffer, err := ioutil.ReadFile(f)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
+	err = yaml.Unmarshal(buffer, &c)
+	if err != nil {
+		log.Fatalf(err.Error())
+	}
 }

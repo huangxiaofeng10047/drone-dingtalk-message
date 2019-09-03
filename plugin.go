@@ -272,7 +272,7 @@ func (p *Plugin) markdownTpl() string {
 	tpl += fmt.Sprintf("# %s \n", title)
 
 	var branch string
-	if p.Drone.Build.Tag != "" {
+	if p.Drone.Build.Tag == "" {
 		branch = fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
 	} else {
 		branch = fmt.Sprintf("> 发布标签： %s", strings.Title(p.Drone.Build.Tag))

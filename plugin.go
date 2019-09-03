@@ -14,7 +14,8 @@ import (
 type (
 	// Repo `repo base info`
 	Repo struct {
-		FullName string //  repository full name
+		FullName string // repository full name
+		ModName  string // repository module name
 	}
 
 	// Build `build info`
@@ -23,6 +24,7 @@ type (
 		Link     string //  providers the current build link
 		RepoName string // docker repo
 		Image    string // docker image name
+		Tag      string // providers the current build tag
 	}
 
 	// Commit `commit info`
@@ -121,42 +123,84 @@ func (p *Plugin) Exec() error {
 
 	newWebhook := webhook.NewWebHook(p.Config.AccessToken)
 	mobiles := strings.Split(p.Config.Mobiles, ",")
-	switch strings.ToLower(p.Config.MsgType) {
-	case "markdown":
-		err = newWebhook.SendMarkdownMsg("新的构建通知", p.baseTpl(), p.Config.IsAtALL, mobiles...)
-	case "text":
-		err = newWebhook.SendTextMsg(p.baseTpl(), p.Config.IsAtALL, mobiles...)
-	case "link":
-		err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
-	case "actioncard":
-		//读取文件
-		b, err := ioutil.ReadFile("repo.txt")
-		if err != nil {
-			fmt.Println("ioutil ReadFile error: ", err)
+	if p.Drone.Repo.ModName != "" {
+		if checkModuleNmae(p.Drone.Repo.ModName) {
+			switch strings.ToLower(p.Config.MsgType) {
+			case "markdown":
+				err = newWebhook.SendMarkdownMsg("新的构建通知", p.baseTpl(), p.Config.IsAtALL, mobiles...)
+			case "text":
+				err = newWebhook.SendTextMsg(p.baseTpl(), p.Config.IsAtALL, mobiles...)
+			case "link":
+				err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
+			case "actioncard":
+				//读取文件
+				b, err := ioutil.ReadFile("repo.txt")
+				if err != nil {
+					fmt.Println("ioutil ReadFile error: ", err)
+				}
+
+				//fmt.Println("repo: ", string(b))
+				repos := strings.Split(string(b), ",")
+				for i, reponame := range repos {
+					fmt.Println(i)
+					fmt.Println("repo:", reponame)
+				}
+
+				content := strings.Split(string(b), ":")[0]
+				RepoName := strings.Split(content, "/")[1]
+				Image := strings.Split(content, "/")[2]
+				deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
+
+				linkTitles := []string{"构建信息", "进行部署"}
+				linkUrls := []string{p.Drone.Build.Link, deployUrl}
+				err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
+			default:
+				msg := "not support message type"
+				err = errors.New(msg)
+			}
+
+			if err == nil {
+				log.Println("send message success!")
+			}
+		}
+	} else {
+		switch strings.ToLower(p.Config.MsgType) {
+		case "markdown":
+			err = newWebhook.SendMarkdownMsg("新的构建通知", p.baseTpl(), p.Config.IsAtALL, mobiles...)
+		case "text":
+			err = newWebhook.SendTextMsg(p.baseTpl(), p.Config.IsAtALL, mobiles...)
+		case "link":
+			err = newWebhook.SendLinkMsg(p.Drone.Build.Status, p.baseTpl(), p.Drone.Commit.Authors.Avatar, p.Drone.Build.Link)
+		case "actioncard":
+			//读取文件
+			b, err := ioutil.ReadFile("repo.txt")
+			if err != nil {
+				fmt.Println("ioutil ReadFile error: ", err)
+			}
+
+			//fmt.Println("repo: ", string(b))
+			repos := strings.Split(string(b), ",")
+			for i, reponame := range repos {
+				fmt.Println(i)
+				fmt.Println("repo:", reponame)
+			}
+
+			content := strings.Split(string(b), ":")[0]
+			RepoName := strings.Split(content, "/")[1]
+			Image := strings.Split(content, "/")[2]
+			deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
+
+			linkTitles := []string{"构建信息", "进行部署"}
+			linkUrls := []string{p.Drone.Build.Link, deployUrl}
+			err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
+		default:
+			msg := "not support message type"
+			err = errors.New(msg)
 		}
 
-		//fmt.Println("repo: ", string(b))
-		repos := strings.Split(string(b), ",")
-		for i, reponame := range repos {
-			fmt.Println(i)
-			fmt.Println("repo:", reponame)
+		if err == nil {
+			log.Println("send message success!")
 		}
-
-		content := strings.Split(string(b), ":")[0]
-		RepoName := strings.Split(content, "/")[1]
-		Image := strings.Split(content, "/")[2]
-		deployUrl := fmt.Sprintf("https://devops.keking.cn/#/k8s/imagetag?namespace=%s&reponame=%s", RepoName, Image)
-
-		linkTitles := []string{"构建信息", "进行部署"}
-		linkUrls := []string{p.Drone.Build.Link, deployUrl}
-		err = newWebhook.SendActionCardMsg("新的构建通知", p.baseTpl(), linkTitles, linkUrls, true, true)
-	default:
-		msg := "not support message type"
-		err = errors.New(msg)
-	}
-
-	if err == nil {
-		log.Println("send message success!")
 	}
 
 	return err
@@ -227,7 +271,12 @@ func (p *Plugin) markdownTpl() string {
 
 	tpl += fmt.Sprintf("# %s \n", title)
 
-	branch := fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
+	var branch string
+	if p.Drone.Build.Tag != "" {
+		branch = fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
+	} else {
+		branch = fmt.Sprintf("> 发布标签： %s", strings.Title(p.Drone.Build.Tag))
+	}
 	tpl += branch + "\n\n"
 
 	//  author info
@@ -287,7 +336,7 @@ func (p *Plugin) markdownTpl() string {
 		}
 	}
 
-	tpl += "---\n\n" + commitSha + " | " + buildDetail + "\n\n"
+	tpl += "---\n\n\n\n" + commitSha + " | " + buildDetail + "\n\n"
 
 	tpl += fmt.Sprintf("![](%s) \n\n", "https://wx3.sinaimg.cn/large/ad5fbf65gy1g555rtnt4kj22ks04kjta.jpg")
 
@@ -399,4 +448,30 @@ func (c *Envfile) ReadYaml(f string) {
 	if err != nil {
 		log.Fatalf(err.Error())
 	}
+}
+
+func checkModuleNmae(name string) bool {
+	envfile := Envfile{}
+	envfile.ReadYaml("./env.yaml")
+
+	if len(envfile.CheckList) == 0 {
+		fmt.Println("+ skip module package check\n")
+	} else {
+		modname := envfile.CheckList
+		var whether bool
+		for _, mod := range modname {
+			if mod == name {
+				whether = true
+				continue
+			}
+		}
+		if whether {
+			fmt.Printf("+ Name matching succeeded, 「%s」 continue !\n", name)
+			return false
+		} else {
+			fmt.Println("+ No matching name,jump step\n")
+			return true
+		}
+	}
+	return false
 }

@@ -98,6 +98,12 @@ func main() {
 			Usage:  "providers the full name of the repository",
 			EnvVar: "DRONE_REPO",
 		},
+		// DRONE_TAG
+		cli.StringFlag{
+			Name:   "repo.tag",
+			Usage:  "providers the tag of the repository",
+			EnvVar: "DRONE_TAG",
+		},
 		cli.StringFlag{
 			Name:   "build.status",
 			Usage:  "build status",
@@ -154,6 +160,11 @@ func main() {
 			Usage:  "link sha source page or not",
 			EnvVar: "PLUGIN_SHA_LINK,PLUGIN_MESSAGE_SHA_LINK",
 		},
+		cli.StringFlag{
+			Name:   "module.name",
+			Usage:  "git update package name",
+			EnvVar: "PLUGIN_MODNAME",
+		},
 	}
 
 	if err := app.Run(os.Args); nil != err {
@@ -168,6 +179,7 @@ func run(c *cli.Context) {
 			//  repo info
 			Repo: Repo{
 				FullName: c.String("repo.fullname"),
+				ModName: c.String("module.name"),
 			},
 			//  build info
 			Build: Build{
@@ -175,6 +187,7 @@ func run(c *cli.Context) {
 				Link:     c.String("build.link"),
 				RepoName: c.String("plugin.build.reponamespace"),
 				Image:    c.String("plugin.build.imagename"),
+				Tag:    c.String("repo.tag"),
 			},
 			Commit: Commit{
 				Sha:     c.String("commit.sha"),

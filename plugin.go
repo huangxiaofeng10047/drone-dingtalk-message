@@ -271,20 +271,20 @@ func (p *Plugin) markdownTpl() string {
 
 	tpl += fmt.Sprintf("# %s \n", title)
 
-	// module name
-	if p.Drone.Repo.ModName != "" {
-		modname := fmt.Sprintf("「%s」",strings.Title(p.Drone.Repo.ModName))
-		tpl += modname + "\n\n"
-	}
-
 	// branch or tag
 	var branch string
 	if p.Drone.Build.Tag == "" {
-		branch = fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))
+		branch = fmt.Sprintf("> %s 分支", p.Drone.Commit.Branch)
 	} else {
-		branch = fmt.Sprintf("> 发布标签： %s", strings.Title(p.Drone.Build.Tag))
+		branch = fmt.Sprintf("> 发布标签： %s", p.Drone.Build.Tag)
 	}
 	tpl += branch + "\n\n"
+
+	// module name
+	if p.Drone.Repo.ModName != "" {
+		modname := fmt.Sprintf("模块：%s",strings.Title(p.Drone.Repo.ModName))
+		tpl += modname + "\n\n"
+	}
 
 	//  author info
 	authorInfo := fmt.Sprintf("提交者：`%s(%s)`", p.Drone.Commit.Authors.Name, p.Drone.Commit.Authors.Email)

@@ -456,7 +456,7 @@ func checkModuleNmae(name string) bool {
 	envfile.ReadYaml("./env.yaml")
 
 	if len(envfile.CheckList) == 0 {
-		fmt.Println("+ skip module package check\n")
+		fmt.Println("+ skip module package check")
 	} else {
 		modname := envfile.CheckList
 		var whether bool
@@ -468,10 +468,10 @@ func checkModuleNmae(name string) bool {
 		}
 		if whether {
 			fmt.Printf("+ Name matching succeeded, 「%s」 continue !\n", name)
-			return false
-		} else {
-			fmt.Println("+ No matching name,jump step\n")
 			return true
+		} else {
+			fmt.Println("+ No matching name,jump step")
+			return false
 		}
 	}
 	return false

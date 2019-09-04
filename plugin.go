@@ -273,7 +273,7 @@ func (p *Plugin) markdownTpl() string {
 
 	// module name
 	if p.Drone.Repo.ModName != "" {
-		modname := fmt.Sprintf("> %s",strings.Title(p.Drone.Repo.ModName))
+		modname := fmt.Sprintf("「%s」",strings.Title(p.Drone.Repo.ModName))
 		tpl += modname + "\n\n"
 	}
 

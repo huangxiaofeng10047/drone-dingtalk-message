@@ -271,6 +271,13 @@ func (p *Plugin) markdownTpl() string {
 
 	tpl += fmt.Sprintf("# %s \n", title)
 
+	// module name
+	if p.Drone.Repo.ModName != "" {
+		modname := fmt.Sprintf("> %s",strings.Title(p.Drone.Repo.ModName))
+		tpl += modname + "\n\n"
+	}
+
+	// branch or tag
 	var branch string
 	if p.Drone.Build.Tag == "" {
 		branch = fmt.Sprintf("> %s 分支", strings.Title(p.Drone.Commit.Branch))

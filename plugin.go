@@ -316,9 +316,12 @@ func (p *Plugin) markdownTpl() string {
 		// p.getEmoticon(),
 		p.Drone.Build.Link)
 
-	envfile := Envfile{}
-	envfile.ReadYaml("./env.yaml")
-	repos := envfile.ImageList
+	var repos []string
+	if p.Drone.Repo.ModName != ""{
+		envfile := Envfile{}
+		envfile.ReadYaml("./env.yaml")
+		repos = envfile.ImageList
+	}
 	//var repos []string
 
 	//读取文件

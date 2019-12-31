@@ -120,3 +120,7 @@ docker build .
 ![WX20190523-112552.png](https://i.loli.net/2019/05/23/5ce612d6bb32d60860.png)
 
 - 新增 repo 名称
+
+### 修复
+
+- 钉钉签名问题

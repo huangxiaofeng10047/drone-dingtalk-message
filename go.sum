@@ -6,6 +6,8 @@ github.com/sunny0826/dingtalk v0.0.0-20191122023751-3b8fe46073aa h1:fkKK9bxk7K8x
 github.com/sunny0826/dingtalk v0.0.0-20191122023751-3b8fe46073aa/go.mod h1:rnFGWsGfEKfKSnXVxpe/eoSMuIgnqJx3LP6jZaYHN2A=
 github.com/sunny0826/dingtalk v0.0.0-20191231052325-1726f9cba739 h1:Xhl6HjZF4eH7l8nPr8KeofPqSOaWDLWaWD1ArtL1tTM=
 github.com/sunny0826/dingtalk v0.0.0-20191231052325-1726f9cba739/go.mod h1:rnFGWsGfEKfKSnXVxpe/eoSMuIgnqJx3LP6jZaYHN2A=
+github.com/sunny0826/dingtalk v0.0.0-20191231055720-8e00c4f49e29 h1:KUEIW432qwNYKgieOL/kxEU5G3CprefvcDIi8uoNgGc=
+github.com/sunny0826/dingtalk v0.0.0-20191231055720-8e00c4f49e29/go.mod h1:rnFGWsGfEKfKSnXVxpe/eoSMuIgnqJx3LP6jZaYHN2A=
 github.com/urfave/cli v1.20.0 h1:fDqGv3UG/4jbVl/QkFwEdddtEDjh/5Ov6X+0B/3bPaw=
 github.com/urfave/cli v1.20.0/go.mod h1:70zkFmudgCuE/ngEzBv17Jvp/497gISqfk5gWijbERA=
 gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=

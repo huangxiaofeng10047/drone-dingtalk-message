@@ -11,7 +11,7 @@ func TestPlugin(t *testing.T) {
 		t.Error("access token empty error should be catch!")
 	}
 
-	p.Config.AccessToken = "39587a4c5cd671e1f53ac706e96271eb3855f8c71c3b05f844efa8b3bf4da833"
+	p.Config.AccessToken = "example-access-token"
 	err = p.Exec()
 	if nil == err {
 		t.Error("commit sha length error should be catch!")

@@ -19,8 +19,8 @@ func main() {
 	app.Copyright = "© 2019 Guo Xudong"
 	app.Authors = []cli.Author{
 		{
-			Name:  "Dee Luo",
-			Email: "luodi0128@gmail.com",
+			Name:  "Guo Xudong",
+			Email: "sunnydog0826@gmail.com",
 		},
 	}
 	app.Action = run
@@ -35,6 +35,11 @@ func main() {
 			Name:   "config.token,access_token,token",
 			Usage:  "dingtalk webhook access token",
 			EnvVar: "PLUGIN_ACCESS_TOKEN,PLUGIN_TOKEN",
+		},
+		cli.StringFlag{
+			Name:   "config.sign,access_sign,sign",
+			Usage:  "dingtalk webhook sign",
+			EnvVar: "PLUGIN_ACCESS_SIGN,PLUGIN_SIGN",
 		},
 		cli.StringFlag{
 			Name:   "config.lang",
@@ -179,7 +184,7 @@ func run(c *cli.Context) {
 			//  repo info
 			Repo: Repo{
 				FullName: c.String("repo.fullname"),
-				ModName: c.String("module.name"),
+				ModName:  c.String("module.name"),
 			},
 			//  build info
 			Build: Build{
@@ -187,7 +192,7 @@ func run(c *cli.Context) {
 				Link:     c.String("build.link"),
 				RepoName: c.String("plugin.build.reponamespace"),
 				Image:    c.String("plugin.build.imagename"),
-				Tag:    c.String("repo.tag"),
+				Tag:      c.String("repo.tag"),
 			},
 			Commit: Commit{
 				Sha:     c.String("commit.sha"),
@@ -208,11 +213,11 @@ func run(c *cli.Context) {
 		//  custom config
 		Config: Config{
 			AccessToken: c.String("config.token"),
-			//Lang:          c.String("config.lang"),
-			IsAtALL: c.Bool("config.message.at.all"),
-			MsgType: c.String("config.message.type"),
-			Mobiles: c.String("config.message.at.mobiles"),
-			Debug:   c.Bool("config.debug"),
+			Sign:        c.String("config.sign"),
+			IsAtALL:     c.Bool("config.message.at.all"),
+			MsgType:     c.String("config.message.type"),
+			Mobiles:     c.String("config.message.at.mobiles"),
+			Debug:       c.Bool("config.debug"),
 		},
 		Extra: Extra{
 			Pic: ExtraPic{

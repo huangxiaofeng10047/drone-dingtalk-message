@@ -8,7 +8,8 @@ import (
 	"log"
 	"strings"
 
-	webhook "github.com/lddsb/dingtalk-webhook"
+	//webhook "github.com/lddsb/dingtalk-webhook"
+	webhook "github.com/sunny0826/dingtalk"
 )
 
 type (
@@ -58,6 +59,7 @@ type (
 		Mobiles     string
 		Username    string
 		MsgType     string
+		Sign        string
 	}
 
 	// MessageConfig `DingTalk message struct`
@@ -121,7 +123,7 @@ func (p *Plugin) Exec() error {
 		return errors.New("commit sha cannot short than 6")
 	}
 
-	newWebhook := webhook.NewWebHook(p.Config.AccessToken)
+	newWebhook := webhook.NewWebHook(p.Config.AccessToken, p.Config.Sign)
 	mobiles := strings.Split(p.Config.Mobiles, ",")
 	if p.Drone.Repo.ModName != "" {
 		if checkModuleNmae(p.Drone.Repo.ModName) {
@@ -282,7 +284,7 @@ func (p *Plugin) markdownTpl() string {
 
 	// module name
 	if p.Drone.Repo.ModName != "" {
-		modname := fmt.Sprintf("模块：%s",strings.Title(p.Drone.Repo.ModName))
+		modname := fmt.Sprintf("模块：%s", strings.Title(p.Drone.Repo.ModName))
 		tpl += modname + "\n\n"
 	}
 
@@ -317,7 +319,7 @@ func (p *Plugin) markdownTpl() string {
 		p.Drone.Build.Link)
 
 	var repos []string
-	if p.Drone.Repo.ModName != ""{
+	if p.Drone.Repo.ModName != "" {
 		envfile := Envfile{}
 		envfile.ReadYaml("./env.yaml")
 		repos = envfile.ImageList

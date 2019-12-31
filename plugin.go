@@ -8,7 +8,6 @@ import (
 	"log"
 	"strings"
 
-	//webhook "github.com/lddsb/dingtalk-webhook"
 	webhook "github.com/sunny0826/dingtalk"
 )
 

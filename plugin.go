@@ -260,7 +260,7 @@ func (p *Plugin) markdownTpl() string {
 	var tpl string
 
 	// top
-	tpl = fmt.Sprintf("![](%s) \n\n", "https://ws3.sinaimg.cn/large/ad5fbf65gy1g4x3lk36p1j215s086k1p.jpg")
+	tpl = fmt.Sprintf("![](%s) \n\n", "https://tvax2.sinaimg.cn/large/ad5fbf65gy1g4x3lk36p1j215s086k1p.jpg")
 
 	//  title
 	title := fmt.Sprintf("%s",
@@ -409,12 +409,12 @@ get picture url
 func (p *Plugin) getPicURL() string {
 	pics := make(map[string]string)
 	//  success picture url
-	pics["success"] = "https://ws4.sinaimg.cn/wap240/006tNc79gy1fz05g5a7utj30he0bfjry.jpg"
+	pics["success"] = "https://tvax1.sinaimg.cn/large/ad5fbf65gy1gaus6md9k8j20rs0itq4u.jpg"
 	if p.Extra.Pic.SuccessPicURL != "" {
 		pics["success"] = p.Extra.Pic.SuccessPicURL
 	}
 	//  failure picture url
-	pics["failure"] = "https://ws1.sinaimg.cn/wap240/006tNc79gy1fz0b4fghpnj30hd0bdmxn.jpg"
+	pics["failure"] = "https://tva1.sinaimg.cn/large/ad5fbf65gy1gaus6zpnocj20rs0itdgg.jpg"
 	if p.Extra.Pic.FailurePicURL != "" {
 		pics["failure"] = p.Extra.Pic.FailurePicURL
 	}
